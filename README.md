@@ -1,6 +1,8 @@
 # springboot-dev
 개발 &amp; 학습용 스프링 부트 데모 프로젝트 입니다.
-IDE: eclipse
+
+## IDE
+eclipse 
 
 ## 개발 목표
 1. **스프링 프로젝트 생성 과정과 구조를 이해합니다.**
