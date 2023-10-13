@@ -23,14 +23,14 @@ public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String author;
 	private String title;
 	private String content;
-	
+
 	@CreationTimestamp
 	private LocalDate createdDate;
-	
+
 	public void update(Post post) {
 		this.title = post.title;
 		this.content = post.content;

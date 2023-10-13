@@ -17,21 +17,25 @@ public class PostService {
 	private final PostRepository postRepository;
 
 	public List<Post> list() {
-		return postRepository.findAll();
+		return postRepository.findAllByOrderByIdDesc();
 	}
-	
+
+	public List<Post> list(String title) {
+		return postRepository.findAllByTitleContainsOrderByIdDesc(title);
+	}
+
 	public Post get(Long id) {
 		return postRepository.findById(id).get();
 	}
-	
+
 	public void add(Post post) {
 		postRepository.save(post);
 	}
-	
+
 	public void delete(Long id) {
 		postRepository.deleteById(id);
 	}
-	
+
 	@Transactional
 	public void update(Long id, Post updPost) {
 		Post orgPost = postRepository.findById(id).get();

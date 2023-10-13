@@ -18,20 +18,38 @@
 	<h3>글 입력</h3>
 	<div id="insert">
 		<div class="input-group">
-			<input type="text" id="title" name="title" placeholder="title" /><br>
-			<input type="text" id="content" name="content" placeholder="content" /><br>
-			<input type="text" id="author" name="author" placeholder="author" /><br>
+			<input type="text" id="title" name="title" placeholder="title"><br>
+			<input type="text" id="content" name="content" placeholder="content"><br>
+			<input type="text" id="author" name="author" placeholder="author"><br>
 		</div>
 		<button onclick="add()">작성하기</button>
 	</div>
 	<hr>
 	<h3>글 상세</h3>
 	<div id="detail"></div>
+	<hr>
+	<h3>제목으로 검색</h3>
+	<div class="search">
+		<input type="text" id="search-title" placeholder="제목으로 검색">
+		<button onclick="searchByTitle()">검색</button>
+	</div>
 	<script>
-		async function list() {
-			const response = await fetch("http://localhost:8080/post/list");
-			const posts = await response.json();
+		async function fetchAPI(url, option) {
+			const response = await fetch(url, option);
+			if (response.ok) {
+				return response.json();
+			} else {
+				throw new Error(response.statusText);
+			}
+		}
 
+		async function list(title) {
+			let url = "http://localhost:8080/post/list";
+			if (title) {
+				url += "?title=" + encodeURIComponent(title);
+			}
+
+			const posts = await fetchAPI(url);
 			const tbody = posts.map(post => `<tr>
 						<td>${post.id}</td>
 						<td><a href="#" onclick="read(${post.id})">${post.title}</a></td>
@@ -60,27 +78,28 @@
 			const author = document.getElementById("author").value;
 
 			if (!title) return;
+			try {
+				const post = await fetchAPI("http://localhost:8080/post/add", {
+					method: "POST",
+					headers: {"Content-Type": "application/json"},
+					body: JSON.stringify({
+						title: title,
+						content: content ? content : null,
+						author: author ? author : null
+					})
+				});
+				read(post.id);
+			} catch (error) {
 
-			const response = await fetch("http://localhost:8080/post/add", {
-				method: "POST",
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify({
-					title: title,
-					content: content ? content : null,
-					author: author ? author : null
-				})
-			});
-			
-			if (response.ok) {
-				list();
 			}
 		};
 
 		async function read(id) {
-			const response = await fetch(`http://localhost:8080/post/${id}`);
-			const post = await response.json();
+			try {
 
-			let tbody = `<tr>
+				const post = await fetchAPI(`http://localhost:8080/post/${id}`);
+
+				let tbody = `<tr>
 						<td>${post.id}</td>
 						<td>${post.title}</td>
 						<td>${post.content}</td>
@@ -88,8 +107,8 @@
 						<td>${post.createdDate}</td>
 				</tr>`;
 
-			document.getElementById("detail").innerHTML =
-				`<table>
+				document.getElementById("detail").innerHTML =
+					`<table>
 			         <thead>
 			           <tr>
 			             <th>글 번호</th>
@@ -105,24 +124,29 @@
 		            <button onclick="update(${post.id})">수정하기</button> 
 		            <button onclick="remove(${post.id})">삭제하기</button> 
         		</div>`;
+			} catch (error) {
+
+			}
 		}
 
 		async function remove(id) {
-			const response = await fetch(`http://localhost:8080/post/${id}`, {
-				method: "DELETE"
-			});
-			if (response.ok) {
+			try {
+				await fetch(`http://localhost:8080/post/${id}`, {
+					method: "DELETE"
+				});
 				alert("삭제되었습니다.");
-				window.location.reload();
+				document.getElementById("detail").innerHTML = ""
+				list();
+			} catch (error) {
 			}
 		}
 
 		async function update(id) {
-			const response = await fetch(`http://localhost:8080/post/${id}`);
-			const post = await response.json();
+			try {
+				const post = await fetchAPI(`http://localhost:8080/post/${id}`);
 
-			document.getElementById("detail").innerHTML =
-				`<div class="input-group">
+				document.getElementById("detail").innerHTML =
+					`<div class="input-group">
 					<input type="text" id="update-title" name="title" placeholder="title" value="${post.title}"><br>
 					<input type="text" id="update-content" name="content" placeholder="content" value="${post.content}"><br>
 					<input type="text" id="update-author" name="author" placeholder="author" value="${post.author}"><br>
@@ -131,6 +155,9 @@
 					<button onclick="updateSubmit(${id})">수정하기</button> 
 					<button onclick="read(${id})">취소하기</button> 
 				</div>`;
+			} catch (error) {
+
+			}
 		};
 
 		async function updateSubmit(id) {
@@ -138,7 +165,7 @@
 			const content = document.getElementById("update-content").value;
 			const author = document.getElementById("update-author").value;
 
-			const response = await fetch(`http://localhost:8080/post/${id}`, {
+			const post = await fetch(`http://localhost:8080/post/${id}`, {
 				method: "PUT",
 				headers: {"Content-Type": "application/json"},
 				body: JSON.stringify({
@@ -147,12 +174,23 @@
 					author: author ? author : null
 				})
 			});
-			if (response.ok) {
-				alert("수정되었습니다.");
-				list();
-				read(id);
+			alert("수정되었습니다.");
+			read(id);
+
+		}
+
+		async function searchByTitle() {
+			const title = document.getElementById("search-title").value;
+
+			if (!title) return;
+
+			try {
+				await list(title);
+			} catch (error) {
+				alert("Error while searching for posts");
 			}
 		}
+
 	</script>
 </body>
 

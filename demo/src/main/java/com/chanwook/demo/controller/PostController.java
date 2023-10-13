@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chanwook.demo.model.Post;
@@ -26,50 +27,50 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping("/list")
-	public List<Post> list() {
-		return postService.list();
+	public List<Post> list(@RequestParam(required = false) String title) {
+		if (title == null) {
+			return postService.list();
+		} else {
+			return postService.list(title);
+		}
 	}
-	
+
 	@GetMapping("/{id}")
 	public Post get(@PathVariable Long id) {
 		return postService.get(id);
 	}
-	
+
 	@PostMapping("/add")
-	public ResponseEntity<String> add(@RequestBody Post post) {
-		ResponseEntity<String> entity = null;
-		try {			
+	public ResponseEntity<Post> add(@RequestBody Post post) {
+		ResponseEntity<Post> entity = null;
+		try {
 			postService.add(post);
-			entity = new ResponseEntity<String>("Success", HttpStatus.OK);
+			entity = new ResponseEntity<Post>(post, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<Post>(post, HttpStatus.BAD_REQUEST);
 		}
 		return entity;
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> remove(@PathVariable Long id) {
-		ResponseEntity<String> entity = null;
-		try {			
+	public void remove(@PathVariable Long id) {
+		try {
 			postService.delete(id);
-			entity = new ResponseEntity<String>("Success", HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return entity;
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<String> update(@PathVariable Long id, @RequestBody Post post) {
-		ResponseEntity<String> entity = null;
-		try {			
+	public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post post) {
+		ResponseEntity<Post> entity = null;
+		try {
 			postService.update(id, post);
-			entity = new ResponseEntity<String>("Success", HttpStatus.OK);
+			entity = new ResponseEntity<Post>(post, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<Post>(post, HttpStatus.BAD_REQUEST);
 		}
 		return entity;
 	}
