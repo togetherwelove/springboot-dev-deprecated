@@ -45,10 +45,10 @@ public class PostController {
 		ResponseEntity<Post> entity = null;
 		try {
 			postService.add(post);
-			entity = new ResponseEntity<Post>(post, HttpStatus.OK);
+			entity = new ResponseEntity<>(post, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<Post>(post, HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<>(post, HttpStatus.BAD_REQUEST);
 		}
 		return entity;
 	}
@@ -67,10 +67,10 @@ public class PostController {
 		ResponseEntity<Post> entity = null;
 		try {
 			postService.update(id, post);
-			entity = new ResponseEntity<Post>(post, HttpStatus.OK);
+			entity = new ResponseEntity<>(post, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<Post>(post, HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<>(post, HttpStatus.BAD_REQUEST);
 		}
 		return entity;
 	}
