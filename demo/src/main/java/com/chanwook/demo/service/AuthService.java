@@ -15,12 +15,8 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 
 	public User authenticate(User user) {
-		try {
-			authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		return user;
 	}
 
