@@ -1,0 +1,40 @@
+package com.chanwook.demo.service;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import com.chanwook.demo.model.Post;
+import com.chanwook.demo.repository.PostRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class PostService {
+	private final PostRepository postRepository;
+
+	public List<Post> list() {
+		return postRepository.findAll();
+	}
+	
+	public Post get(Long id) {
+		return postRepository.findById(id).get();
+	}
+	
+	public void add(Post post) {
+		postRepository.save(post);
+	}
+	
+	public void delete(Long id) {
+		postRepository.deleteById(id);
+	}
+	
+	@Transactional
+	public void update(Long id, Post updPost) {
+		Post orgPost = postRepository.findById(id).get();
+		orgPost.update(updPost);
+	}
+}
