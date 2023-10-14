@@ -15,11 +15,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-	private AuthService authService;
+	private final AuthService authService;
 
 	@PostMapping("/login")
 	public ResponseEntity<User> authenticate(@RequestBody User user) {
-		return ResponseEntity.ok(authService.authenticate(user));
+		User logedInUser = authService.authenticate(user);
+		return ResponseEntity.ok(logedInUser);
 
 		// authentication : 로그인, 인증
 		// authority : 회원가입, 인가

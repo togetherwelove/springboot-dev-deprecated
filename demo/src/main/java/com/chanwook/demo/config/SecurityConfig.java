@@ -21,10 +21,8 @@ public class SecurityConfig {
 
 		http.csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**").disable())
 				.authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-						.antMatchers("/", "/auth/**", "/h2-console/**").permitAll()
-						.anyRequest().authenticated())
-				.authenticationProvider(authenticationProvider)
-				.headers((headers) -> headers.frameOptions().disable())
+						.antMatchers("/", "/auth/**", "/h2-console/**").permitAll().anyRequest().authenticated())
+				.authenticationProvider(authenticationProvider).headers((headers) -> headers.frameOptions().disable())
 				.httpBasic();
 		return http.build();
 	}

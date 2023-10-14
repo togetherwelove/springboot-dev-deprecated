@@ -44,7 +44,7 @@
 		}
 
 		async function list(title) {
-			let url = "http://localhost:8080/post/list";
+			let url = "http://localhost:8080/post";
 			if (title) {
 				url += "?title=" + encodeURIComponent(title);
 			}
@@ -78,28 +78,23 @@
 			const author = document.getElementById("author").value;
 
 			if (!title) return;
-			try {
-				const post = await fetchAPI("http://localhost:8080/post/add", {
-					method: "POST",
-					headers: {"Content-Type": "application/json"},
-					body: JSON.stringify({
-						title: title,
-						content: content ? content : null,
-						author: author ? author : null
-					})
-				});
-				read(post.id);
-			} catch (error) {
-
-			}
+			const post = await fetchAPI("http://localhost:8080/post", {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({
+					title: title,
+					content: content ? content : null,
+					author: author ? author : null
+				})
+			});
+			read(post.id);
 		};
 
 		async function read(id) {
-			try {
 
-				const post = await fetchAPI(`http://localhost:8080/post/${id}`);
+			const post = await fetchAPI(`http://localhost:8080/post/${id}`);
 
-				let tbody = `<tr>
+			let tbody = `<tr>
 						<td>${post.id}</td>
 						<td>${post.title}</td>
 						<td>${post.content}</td>
@@ -107,8 +102,8 @@
 						<td>${post.createdDate}</td>
 				</tr>`;
 
-				document.getElementById("detail").innerHTML =
-					`<table>
+			document.getElementById("detail").innerHTML =
+				`<table>
 			         <thead>
 			           <tr>
 			             <th>글 번호</th>
@@ -124,29 +119,22 @@
 		            <button onclick="update(${post.id})">수정하기</button> 
 		            <button onclick="remove(${post.id})">삭제하기</button> 
         		</div>`;
-			} catch (error) {
-
-			}
 		}
 
 		async function remove(id) {
-			try {
-				await fetch(`http://localhost:8080/post/${id}`, {
-					method: "DELETE"
-				});
-				alert("삭제되었습니다.");
-				document.getElementById("detail").innerHTML = ""
-				list();
-			} catch (error) {
-			}
+			await fetch(`http://localhost:8080/post/${id}`, {
+				method: "DELETE"
+			});
+			alert("삭제되었습니다.");
+			document.getElementById("detail").innerHTML = ""
+			list();
 		}
 
 		async function update(id) {
-			try {
-				const post = await fetchAPI(`http://localhost:8080/post/${id}`);
+			const post = await fetchAPI(`http://localhost:8080/post/${id}`);
 
-				document.getElementById("detail").innerHTML =
-					`<div class="input-group">
+			document.getElementById("detail").innerHTML =
+				`<div class="input-group">
 					<input type="text" id="update-title" name="title" placeholder="title" value="${post.title}"><br>
 					<input type="text" id="update-content" name="content" placeholder="content" value="${post.content}"><br>
 					<input type="text" id="update-author" name="author" placeholder="author" value="${post.author}"><br>
@@ -155,9 +143,6 @@
 					<button onclick="updateSubmit(${id})">수정하기</button> 
 					<button onclick="read(${id})">취소하기</button> 
 				</div>`;
-			} catch (error) {
-
-			}
 		};
 
 		async function updateSubmit(id) {
@@ -184,11 +169,7 @@
 
 			if (!title) return;
 
-			try {
-				await list(title);
-			} catch (error) {
-				alert("Error while searching for posts");
-			}
+			await list(title);
 		}
 
 	</script>

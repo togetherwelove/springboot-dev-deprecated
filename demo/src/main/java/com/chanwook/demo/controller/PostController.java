@@ -26,7 +26,7 @@ public class PostController {
 
 	private final PostService postService;
 
-	@GetMapping("/list")
+	@GetMapping()
 	public List<Post> list(@RequestParam(required = false) String title) {
 		if (title == null) {
 			return postService.list();
@@ -35,16 +35,29 @@ public class PostController {
 		}
 	}
 
+	@PostMapping()
+	public ResponseEntity<Post> add(@RequestBody Post post) {
+		ResponseEntity<Post> entity = null;
+		try {
+			postService.add(post);
+			entity = new ResponseEntity<>(post, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(post, HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+
 	@GetMapping("/{id}")
 	public Post get(@PathVariable Long id) {
 		return postService.get(id);
 	}
 
-	@PostMapping("/add")
-	public ResponseEntity<Post> add(@RequestBody Post post) {
+	@PutMapping("/{id}")
+	public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post post) {
 		ResponseEntity<Post> entity = null;
 		try {
-			postService.add(post);
+			postService.update(id, post);
 			entity = new ResponseEntity<>(post, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,19 +73,6 @@ public class PostController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@PutMapping("/{id}")
-	public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post post) {
-		ResponseEntity<Post> entity = null;
-		try {
-			postService.update(id, post);
-			entity = new ResponseEntity<>(post, HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<>(post, HttpStatus.BAD_REQUEST);
-		}
-		return entity;
 	}
 
 }
