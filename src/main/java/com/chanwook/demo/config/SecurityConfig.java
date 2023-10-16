@@ -40,10 +40,11 @@ public class SecurityConfig {
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
 				.logout(logoutConfig -> {
-					logoutConfig.logoutUrl("/auth/logout").addLogoutHandler(logoutService).logoutSuccessHandler(
-							(request, response, authentication) -> SecurityContextHolder.clearContext());
+					logoutConfig
+					.logoutUrl("/auth/logout")
+					.addLogoutHandler(logoutService)
+					.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
 				})
-
 				.headers((headers) -> headers.frameOptions().disable());
 		return http.build();
 	}
