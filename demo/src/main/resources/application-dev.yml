@@ -17,3 +17,11 @@ spring:
         format-sql: true
     hibernate:
       ddl-auto: create-drop
+      
+application:
+  security:
+    jwt:
+      secret-key: FE283C4D7AC44F2CB15AD2865F427
+      expiration: 300000 # 5 mins
+      refresh-token:
+        expiration: 86400000 # 1 day

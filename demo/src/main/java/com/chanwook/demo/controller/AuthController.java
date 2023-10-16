@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chanwook.demo.model.AuthRequest;
+import com.chanwook.demo.model.AuthResponse;
 import com.chanwook.demo.model.User;
 import com.chanwook.demo.service.AuthService;
 
@@ -18,9 +20,14 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/login")
-	public ResponseEntity<User> authenticate(@RequestBody User user) {
-		User logedInUser = authService.authenticate(user);
-		return ResponseEntity.ok(logedInUser);
+	public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest req) {
+		
+		User user = User.builder()
+				.email(req.getEmail())
+				.password(req.getPassword())
+				.build();
+		
+		return ResponseEntity.ok(authService.authenticate(user));
 
 		// authentication : 로그인, 인증
 		// authority : 회원가입, 인가
