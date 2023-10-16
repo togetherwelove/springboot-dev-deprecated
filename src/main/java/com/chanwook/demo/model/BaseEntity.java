@@ -18,14 +18,14 @@ import lombok.Getter;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-	
-	@Id
+
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
+	@Id private long id;
+
 	@CreatedDate
 	private LocalDateTime createdAt;
-	
+
 	@LastModifiedDate
 	private LocalDateTime modifiedAt;
 

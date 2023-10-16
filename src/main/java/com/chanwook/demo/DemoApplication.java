@@ -5,14 +5,16 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.chanwook.demo.model.User;
+import com.chanwook.demo.model.auth.User;
 import com.chanwook.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @SpringBootApplication
+@EnableJpaAuditing
 @RequiredArgsConstructor
 public class DemoApplication implements CommandLineRunner {
 

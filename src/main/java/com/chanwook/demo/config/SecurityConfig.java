@@ -6,7 +6,12 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.chanwook.demo.config.filter.JwtAuthenticationFilter;
+import com.chanwook.demo.config.service.LogoutService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+	private final LogoutService logoutService;
 	private final AuthenticationProvider authenticationProvider;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -23,13 +30,19 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**").disable())
 
 				.authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-						.antMatchers("/", "/auth/**", "/h2-console/**").permitAll()
-						.anyRequest().authenticated())
+						.antMatchers("/", "/auth/**", "/h2-console/**").permitAll().anyRequest().authenticated())
 
 				.authenticationProvider(authenticationProvider)
 
 				.sessionManagement(
 						(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+				.logout(logoutConfig -> {
+					logoutConfig.logoutUrl("/auth/logout").addLogoutHandler(logoutService).logoutSuccessHandler(
+							(request, response, authentication) -> SecurityContextHolder.clearContext());
+				})
 
 				.headers((headers) -> headers.frameOptions().disable());
 		return http.build();

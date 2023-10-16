@@ -1,7 +1,6 @@
 package com.chanwook.demo.model;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +17,4 @@ public class Profile extends BaseEntity {
 	private byte[] data;
 	private String mimeType;
 	private Long size;
-	
-	@OneToOne
-	private User user;
 }

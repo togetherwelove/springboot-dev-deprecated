@@ -1,14 +1,15 @@
-package com.chanwook.demo.model;
+package com.chanwook.demo.model.auth;
 
 import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.chanwook.demo.model.BaseEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,19 +21,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USERS")
+@Table(name = "Users")
 public class User extends BaseEntity implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@Column(unique = true)
 	private String email;
-	
+
 	@Column
 	private String password;
 	private String name;
-	
-	@OneToOne(mappedBy = "user")
-	private Profile profile;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
