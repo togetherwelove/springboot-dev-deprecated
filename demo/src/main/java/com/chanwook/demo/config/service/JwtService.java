@@ -19,11 +19,11 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-	@Value("${application.security.jwt.secret-key")
+	@Value("${application.security.jwt.secret-key}")
 	private String SECRET_KEY;
 	@Value("${application.security.jwt.expiration}")
 	private long JWT_EXPIRATION;
-	@Value("${application.security.jwt.refresh-token.expiration")
+	@Value("${application.security.jwt.refresh-token.expiration}")
 	private long REFRESH_EXPIRATION;
 
 	public String extractUsername(String token) {

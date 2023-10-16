@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,9 @@ public class User extends BaseEntity implements UserDetails {
 	@Column
 	private String password;
 	private String name;
+	
+	@OneToOne(mappedBy = "user")
+	private Profile profile;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
