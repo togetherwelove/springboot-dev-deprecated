@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chanwook.demo.model.AuthRequest;
-import com.chanwook.demo.model.AuthResponse;
+import com.chanwook.demo.controller.dto.AuthRequest;
+import com.chanwook.demo.controller.dto.AuthResponse;
 import com.chanwook.demo.model.User;
 import com.chanwook.demo.service.AuthService;
 

@@ -20,11 +20,11 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
 	@Value("${application.security.jwt.secret-key}")
-	private String SECRET_KEY;
+	private String secretKey;
 	@Value("${application.security.jwt.expiration}")
-	private long JWT_EXPIRATION;
+	private long jwtExpiration;
 	@Value("${application.security.jwt.refresh-token.expiration}")
-	private long REFRESH_EXPIRATION;
+	private long refreshExpiration;
 
 	public String extractUsername(String token) {
 		return extrectClaim(token, Claims::getSubject);
@@ -40,11 +40,11 @@ public class JwtService {
 	}
 
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-		return buildToken(extraClaims, userDetails, JWT_EXPIRATION);
+		return buildToken(extraClaims, userDetails, jwtExpiration);
 	}
 	
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, REFRESH_EXPIRATION);
+		return buildToken(new HashMap<>(), userDetails, refreshExpiration);
 	}
 
 	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
@@ -78,7 +78,7 @@ public class JwtService {
 	}
 
 	private SecretKey getSignInKey() {
-		byte[] keyByte = Decoders.BASE64.decode(SECRET_KEY);
+		byte[] keyByte = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyByte);
 	}
 }

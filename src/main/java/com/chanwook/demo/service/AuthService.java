@@ -5,7 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import com.chanwook.demo.config.service.JwtService;
-import com.chanwook.demo.model.AuthResponse;
+import com.chanwook.demo.controller.dto.AuthResponse;
 import com.chanwook.demo.model.User;
 
 import lombok.RequiredArgsConstructor;
