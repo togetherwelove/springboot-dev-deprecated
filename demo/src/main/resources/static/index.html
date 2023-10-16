@@ -10,6 +10,13 @@
 
 <body>
 	<h1>Sample</h1>
+	<hr>
+	<h3>로그인</h3>
+	<div class="input-group">
+		<input type="text" id="email" name="email" placeholder="email"><br>
+		<input type="password" id="password" name="password" placeholder="password"><br>
+	</div>
+	<button onclick="authenticate()">로그인</button>
 	<h3>글 목록</h3>
 	<div id="list">
 	</div>
@@ -33,6 +40,10 @@
 		<input type="text" id="search-title" placeholder="제목으로 검색">
 		<button onclick="searchByTitle()">검색</button>
 	</div>
+	<hr>
+	<h3>회원 목록</h3>
+	<div id="user-list"></div>
+	<button onclick="userList()">조회하기</button>
 	<script>
 		async function fetchAPI(url, option) {
 			const response = await fetch(url, option);
@@ -172,6 +183,32 @@
 			await list(title);
 		}
 
+		async function userList() {
+			let url = "http://localhost:8080/auth/users";
+
+			const users = await fetchAPI(url);
+			const tbody = users.map(user => `<tr>
+						<td>${user.id}</td>
+						<td><a href="#" onclick="read(${user.id})">${user.email}</a></td>
+						<td>${user.name}</td>
+						<td>${user.createdAt}</td>
+						<td>${user.modifiedAt}</td>
+				</tr>`).join('');
+
+			document.getElementById("list").innerHTML =
+				`<table>
+			         <thead>
+			           <tr>
+			             <th>회원 번호</th>
+			             <th>이메일</th>
+			             <th>이름</th>
+			             <th>가입 일자</th>
+			             <th>정보 수정 일자</th>
+			           </tr>
+			         </thead>
+         			 <tbody>${tbody}</tbody>
+       			</table>`;
+		};
 	</script>
 </body>
 
