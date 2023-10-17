@@ -28,8 +28,9 @@ public class PostService {
 		return postRepository.findById(id).get();
 	}
 
-	public void add(Post post) {
-		postRepository.save(post);
+	public Post add(Post post, String username) {
+		post.setUsername(username);
+		return postRepository.save(post);
 	}
 
 	public void delete(Long id) {

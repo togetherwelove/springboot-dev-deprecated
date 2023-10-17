@@ -1,8 +1,8 @@
-package com.chanwook.demo.controller;
+package com.chanwook.demo.api;
 
+import java.security.Principal;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,52 +27,36 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping()
-	public List<Post> list(@RequestParam(required = false) String title) {
+	public ResponseEntity<List<Post>> list(@RequestParam(required = false) String title) {
 		if (title == null) {
-			return postService.list();
+			return ResponseEntity.ok().body(postService.list());
 		} else {
-			return postService.list(title);
+			return ResponseEntity.ok().body(postService.list(title));
 		}
 	}
 
 	@PostMapping()
-	public ResponseEntity<Post> add(@RequestBody Post post) {
-		ResponseEntity<Post> entity = null;
-		try {
-			postService.add(post);
-			entity = new ResponseEntity<>(post, HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<>(post, HttpStatus.BAD_REQUEST);
-		}
-		return entity;
+	public ResponseEntity<Post> add(@RequestBody Post req, Principal principal) {
+
+		Post post = postService.add(req, principal.getName());
+
+		return ResponseEntity.ok().body(post);
 	}
 
 	@GetMapping("/{id}")
-	public Post get(@PathVariable Long id) {
-		return postService.get(id);
+	public ResponseEntity<Post> get(@PathVariable Long id) {
+		Post post = postService.get(id);
+		return ResponseEntity.ok().body(post);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post post) {
-		ResponseEntity<Post> entity = null;
-		try {
-			postService.update(id, post);
-			entity = new ResponseEntity<>(post, HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<>(post, HttpStatus.BAD_REQUEST);
-		}
-		return entity;
+		postService.update(id, post);
+		return ResponseEntity.ok().body(post);
 	}
 
 	@DeleteMapping("/{id}")
 	public void remove(@PathVariable Long id) {
-		try {
-			postService.delete(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		postService.delete(id);
 	}
-
 }

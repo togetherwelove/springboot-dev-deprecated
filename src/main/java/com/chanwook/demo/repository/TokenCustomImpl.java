@@ -22,11 +22,13 @@ public class TokenCustomImpl implements TokenCustom{
 		JPAQuery<Tuple> query = queryFactory
 				.select(t.id, t.token, t.tokenType, t.expired, t.revoked, t.username)
 				.from(t)
-				.where(t.expired.isFalse(), t.revoked.isFalse());
+				.where(t.username.eq(email), t.expired.isFalse(), t.revoked.isFalse());
+
 		return query.fetch()
 				.stream().map(tuple ->
 				Token.builder()
 				.id(tuple.get(t.id))
+				.username(tuple.get(t.username))
 				.token(tuple.get(t.token))
 				.tokenType(tuple.get(t.tokenType))
 				.expired(tuple.get(t.expired))

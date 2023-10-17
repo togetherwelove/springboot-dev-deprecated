@@ -1,4 +1,4 @@
-package com.chanwook.demo.controller;
+package com.chanwook.demo.api;
 
 import java.util.List;
 
@@ -23,5 +23,4 @@ public class UserController {
 	public ResponseEntity<List<User>> list() {
 		return ResponseEntity.ok(userService.list());
 	}
-
 }
