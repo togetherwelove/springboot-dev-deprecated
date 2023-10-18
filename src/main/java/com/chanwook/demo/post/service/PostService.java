@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.chanwook.demo.post.Post;
@@ -16,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 	private final PostRepository postRepository;
 
-	public List<Post> list() {
-		return postRepository.findAllByOrderByIdDesc();
+	public List<Post> list(Pageable pageable) {
+		return postRepository.findAllByOrderByIdDesc(pageable);
 	}
 
 	public List<Post> list(String title) {
