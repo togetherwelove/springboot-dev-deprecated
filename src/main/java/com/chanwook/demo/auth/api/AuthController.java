@@ -47,13 +47,13 @@ public class AuthController {
 				.maxAge(86400)
 				.domain("localhost")
 				.build();
-		
+
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
 				.body(new TokenVO(authResponse.getAccessToken(), null));
 
 	}
-	
-	@PostMapping("/join")
+
+	@PostMapping("/signup")
 	public ResponseEntity<User> authorize(@RequestBody SignupRequest signup) {
 		User user = signupService.signup(signup);
 		return ResponseEntity.ok().body(user);
