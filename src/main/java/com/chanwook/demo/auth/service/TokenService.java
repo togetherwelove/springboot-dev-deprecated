@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.chanwook.demo.auth.Token;
 import com.chanwook.demo.auth.TokenType;
-import com.chanwook.demo.auth.api.dto.AuthResponse;
+import com.chanwook.demo.auth.api.dto.TokenVO;
 import com.chanwook.demo.auth.repository.TokenRepository;
 import com.chanwook.demo.config.service.JwtService;
 import com.chanwook.demo.user.User;
@@ -21,21 +21,21 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class TokenService {
 
 	private final AuthenticationManager authenticationManager;
 	private final UserRepository userRepository;
 	private final TokenRepository tokenRepository;
 	private final JwtService jwtService;
 
-	public AuthResponse authenticate(User user) {
+	public TokenVO authenticate(User user) {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		String accessToken = jwtService.generateToken(user);
 		String refreshToken = jwtService.generateRefreshToken(user);
 		revokeAllUserTokens(user);
 		saveToken(user, refreshToken);
-		return new AuthResponse(accessToken, refreshToken);
+		return new TokenVO(accessToken, refreshToken);
 	}
 
 	private void revokeAllUserTokens(User user) {
@@ -62,7 +62,7 @@ public class AuthService {
 				User user = userRepository.findByEmail(username).get();
 				if (jwtService.isTokenValid(refreshToken, user)) {
 					String accessToken = jwtService.generateToken(user);
-					AuthResponse authResponse = new AuthResponse(accessToken, null);
+					TokenVO authResponse = new TokenVO(accessToken, null);
 					new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
 				}
 			}

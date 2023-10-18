@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.chanwook.demo.auth.Token;
+import com.chanwook.demo.auth.repository.custom.TokenCustom;
 
 
 public interface TokenRepository extends JpaRepository<Token, Long>, TokenCustom {

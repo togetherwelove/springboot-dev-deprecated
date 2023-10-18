@@ -1,4 +1,4 @@
-package com.chanwook.demo.auth.repository;
+package com.chanwook.demo.auth.repository.custom;
 
 import java.util.List;
 
