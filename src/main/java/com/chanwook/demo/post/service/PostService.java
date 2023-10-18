@@ -1,4 +1,4 @@
-package com.chanwook.demo.service;
+package com.chanwook.demo.post.service;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.chanwook.demo.model.Post;
-import com.chanwook.demo.repository.PostRepository;
+import com.chanwook.demo.post.Post;
+import com.chanwook.demo.post.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 

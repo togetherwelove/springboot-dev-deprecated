@@ -1,10 +1,10 @@
-package com.chanwook.demo.repository;
+package com.chanwook.demo.auth.repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.chanwook.demo.auth.Token;
 import com.chanwook.demo.model.auth.QToken;
-import com.chanwook.demo.model.auth.Token;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -1,4 +1,4 @@
-package com.chanwook.demo.controller.dto;
+package com.chanwook.demo.auth.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,4 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
 	private String accessToken;
 	private String refreshToken;
-
-	public AuthResponse(String accessToken) {
-		this.accessToken = accessToken;
-	}
 }

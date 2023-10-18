@@ -1,11 +1,11 @@
-package com.chanwook.demo.service;
+package com.chanwook.demo.user.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.chanwook.demo.model.auth.User;
-import com.chanwook.demo.repository.UserRepository;
+import com.chanwook.demo.user.User;
+import com.chanwook.demo.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

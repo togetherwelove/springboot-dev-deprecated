@@ -1,4 +1,4 @@
-package com.chanwook.demo.model.auth;
+package com.chanwook.demo.auth;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

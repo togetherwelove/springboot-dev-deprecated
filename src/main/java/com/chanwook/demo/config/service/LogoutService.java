@@ -10,8 +10,8 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.chanwook.demo.model.auth.Token;
-import com.chanwook.demo.repository.TokenRepository;
+import com.chanwook.demo.auth.Token;
+import com.chanwook.demo.auth.repository.TokenRepository;
 
 import lombok.RequiredArgsConstructor;
 

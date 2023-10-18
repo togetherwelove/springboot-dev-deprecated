@@ -1,4 +1,4 @@
-package com.chanwook.demo.api;
+package com.chanwook.demo.user.api;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chanwook.demo.model.auth.User;
-import com.chanwook.demo.service.UserService;
+import com.chanwook.demo.user.User;
+import com.chanwook.demo.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

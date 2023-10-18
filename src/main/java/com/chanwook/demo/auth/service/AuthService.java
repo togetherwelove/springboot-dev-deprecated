@@ -1,23 +1,21 @@
-package com.chanwook.demo.service;
+package com.chanwook.demo.auth.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
+import com.chanwook.demo.auth.Token;
+import com.chanwook.demo.auth.TokenType;
+import com.chanwook.demo.auth.api.dto.AuthResponse;
+import com.chanwook.demo.auth.repository.TokenRepository;
 import com.chanwook.demo.config.service.JwtService;
-import com.chanwook.demo.controller.dto.AuthResponse;
-import com.chanwook.demo.model.auth.Token;
-import com.chanwook.demo.model.auth.TokenType;
-import com.chanwook.demo.model.auth.User;
-import com.chanwook.demo.repository.TokenRepository;
-import com.chanwook.demo.repository.UserRepository;
+import com.chanwook.demo.user.User;
+import com.chanwook.demo.user.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,12 +31,11 @@ public class AuthService {
 	public AuthResponse authenticate(User user) {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-		String jwtToken = jwtService.generateToken(user);
+		String accessToken = jwtService.generateToken(user);
 		String refreshToken = jwtService.generateRefreshToken(user);
 		revokeAllUserTokens(user);
-		saveToken(user, jwtToken);
 		saveToken(user, refreshToken);
-		return new AuthResponse(jwtToken, refreshToken);
+		return new AuthResponse(accessToken, refreshToken);
 	}
 
 	private void revokeAllUserTokens(User user) {
@@ -58,21 +55,17 @@ public class AuthService {
 		tokenRepository.save(token);
 	}
 
-	public Optional<String> refreshToken(String refreshToken, HttpServletResponse response) throws IOException {
-		String accessToken = null;
-		if (!ObjectUtils.isEmpty(refreshToken)) {
-			final var userEmail = jwtService.extractUsername(refreshToken);
-			if (!userEmail.isEmpty()) {
-				var user = userRepository.findByEmail(userEmail);
-				List<Token> validRefreshTokens = tokenRepository.findByTokenAndUsernameAndRevoked(refreshToken,
-						userEmail, false);
-				if (user.isPresent() && validRefreshTokens.size() > 0
-						&& jwtService.isTokenValid(refreshToken, user.get())) {
-					accessToken = jwtService.generateToken(user.get());
-					saveToken(user.get(), accessToken);
+	public void refreshToken(String refreshToken, HttpServletResponse response) throws IOException {
+		if (refreshToken != null) {
+			final String username = jwtService.extractUsername(refreshToken);
+			if (username != null) {
+				User user = userRepository.findByEmail(username).get();
+				if (jwtService.isTokenValid(refreshToken, user)) {
+					String accessToken = jwtService.generateToken(user);
+					AuthResponse authResponse = new AuthResponse(accessToken, null);
+					new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
 				}
 			}
 		}
-		return accessToken == null ? Optional.empty() : Optional.of(accessToken);
 	}
 }
