@@ -18,7 +18,11 @@ public class SignupService {
 	private final PasswordEncoder passwordEncoder;
 
 	public User signup(SignupRequest req) {
-		return userRepository.save(userMapper(req));
+		if (req.getPassword().equals(req.getPasswordVerify())) {
+			return userRepository.save(userMapper(req));
+		} else {
+			throw new RuntimeException("비밀번호가 맞지 않습니다.");
+		}
 	}
 
 	private User userMapper(SignupRequest req) {

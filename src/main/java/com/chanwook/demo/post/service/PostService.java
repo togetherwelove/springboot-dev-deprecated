@@ -1,9 +1,8 @@
 package com.chanwook.demo.post.service;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +16,8 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 	private final PostRepository postRepository;
 
-	public List<Post> list(Pageable pageable) {
+	public Page<Post> list(Pageable pageable) {
 		return postRepository.findAllByOrderByIdDesc(pageable);
-	}
-
-	public List<Post> list(String title) {
-		return postRepository.findAllByTitleContainsOrderByIdDesc(title);
 	}
 
 	public Post get(Long id) {

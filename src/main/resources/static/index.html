@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>회원가입</h1>
+      <div class="input-group">
+        <form id="signup-form">
+          <input type="email" name="email" id="email" placeholder="email" /><br />
+          <input type="password" name="password" id="password" placeholder="password" /><br />
+          <input type="password" name="passwordVerify" id="passwordVerify" placeholder="passwordVerify" /><br />
+          <input type="text" name="name" id="name" placeholder="name" /><br />
+          <button type="submit">회원가입</button>
+        </form>
+      </div>
+      <h1>로그인</h1>
+      <div class="input-group">
+        <form id="login-form">
+          <input type="text" name="email" id="email" placeholder="email" />
+          <input type="text" name="password" id="password" placeholder="password" />
+          <button type="submit">로그인</button>
+        </form>
+      </div>
+      <h1>Post List</h1>
+      <button class="list-btn" onclick="list()">조회하기</button>
+      <div id="list"></div>
+      <nav>
+        <ul id="pagination" class="pagination justify-content-center"></ul>
+      </nav>
+    </div>
+
+    <script>
+      const localUrl = "http://localhost:8080";
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("login-form").addEventListener("submit", function (e) {
+          e.preventDefault();
+          let data = new FormData(e.target);
+
+          let email = data.get("email");
+          let password = data.get("password");
+
+          const xhr = new XMLHttpRequest();
+
+          xhr.open("POST", `${localUrl}/auth/login`);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.send(
+            JSON.stringify({
+              email: email,
+              password: password,
+            })
+          );
+
+          xhr.onload = () => {
+            if (xhr.status == 200) {
+              const response = JSON.parse(xhr.responseText);
+              localStorage.setItem("accessToken", response.accessToken);
+              alert("로그인 완료");
+            }
+          };
+        });
+
+        document.getElementById("signup-form").addEventListener("submit", function (e) {
+          e.preventDefault();
+          let data = new FormData(e.target);
+
+          let email = data.get("email");
+          let password = data.get("password");
+          let passwordVerify = data.get("passwordVerify");
+
+          const xhr = new XMLHttpRequest();
+
+          xhr.open("POST", `${localUrl}/auth/signup`);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.send(
+            JSON.stringify({
+              email: email,
+              password: password,
+              passwordVerify: passwordVerify,
+            })
+          );
+
+          xhr.onload = () => {
+            if (xhr.status == 200) {
+              const response = JSON.parse(xhr.responseText);
+              alert("회원가입 완료");
+            }
+          };
+        });
+      });
+
+      function updatePosts(posts) {
+        let tableHTML = `
+        <table class='table table-striped'>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Title</th>
+              <th>Content</th>
+              <th>Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${posts
+              .map(
+                (post) =>
+                  `<tr>
+                <td scope="col">${post.id}</td>
+                <td scope="col">${post.title}</td>
+                <td scope="col">${post.content}</td>
+                <td scope="col">${post.author}</td>
+                </tr>`
+              )
+              .join("")}
+            </tbody>
+          </table>`;
+
+        document.getElementById("list").innerHTML = tableHTML;
+      }
+
+      function updatePagination(currentPage, totalPages) {
+        let paginationHTML = `<li class="page-item ${currentPage === 0 ? "disabled" : ""}">
+                             <a class="page-link" href="#" onclick="${currentPage > 0 ? "goToPage(" + (currentPage - 1) + ")" : ""}">Previous</a>
+                           </li>`;
+
+        for (let i = 0; i < totalPages; i++) {
+          paginationHTML += `<li class="page-item ${i === currentPage ? "disabled" : ""}">
+                             <a class="page-link" href="#" onclick="${i !== currentPage ? "goToPage(" + i + ")" : ""}">${i + 1}</a>
+                            </li>`;
+        }
+
+        paginationHTML += `<li class="page-item ${currentPage === totalPages - 1 ? "disabled" : ""}">
+                          <a class="page-link" href="#" onclick="${currentPage < totalPages - 1 ? "goToPage(" + (currentPage + 1) + ")" : ""}">Next</a>
+                         </li>`;
+
+        document.getElementById("pagination").innerHTML = paginationHTML;
+      }
+
+      function list() {
+        const token = localStorage.getItem("accessToken");
+        const authorization = `Bearer ${token}`;
+
+        fetchPosts(authorization, `${localUrl}/post?size=5`);
+      }
+
+      function goToPage(pageNumber) {
+        const token = localStorage.getItem("accessToken");
+        const authorization = `Bearer ${token}`;
+
+        fetchPosts(authorization, `${localUrl}/post?page=${pageNumber}&size=5`);
+      }
+
+      function fetchPosts(authorization, url) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Authorization", authorization);
+        xhr.send();
+
+        xhr.onload = () => {
+          if (xhr.status == 200) {
+            const response = JSON.parse(xhr.responseText);
+
+            // Update the posts and pagination
+            updatePosts(response.content);
+            updatePagination(response.number, response.totalPages);
+          } else if (xhr.status == 401) {
+            refreshToken();
+          }
+        };
+      }
+
+      function refreshToken() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `${localUrl}/auth/refresh`);
+        xhr.withCredentials = true;
+
+        xhr.onload = () => {
+          if (xhr.status == 200) {
+            const response = JSON.parse(xhr.responseText);
+            localStorage.setItem("accessToken", response.accessToken);
+          }
+        };
+        xhr.send();
+      }
+    </script>
+  </body>
+</html>

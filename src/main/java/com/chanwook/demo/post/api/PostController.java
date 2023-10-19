@@ -1,8 +1,8 @@
 package com.chanwook.demo.post.api;
 
 import java.security.Principal;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +27,7 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping()
-	public ResponseEntity<List<Post>> list(Pageable pageable) {
+	public ResponseEntity<Page<Post>> list(Pageable pageable) {
 		return ResponseEntity.ok().body(postService.list(pageable));
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.chanwook.demo.config.entrypoint.JwtAuthenticationEntryPoint;
 import com.chanwook.demo.config.filter.JwtAuthenticationFilter;
 import com.chanwook.demo.config.service.LogoutService;
 
@@ -23,6 +24,7 @@ public class SecurityConfig {
 	private final LogoutService logoutService;
 	private final AuthenticationProvider authenticationProvider;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,6 +41,7 @@ public class SecurityConfig {
 						(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.exceptionHandling(exceptionHeadler -> exceptionHeadler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
 				.logout(logoutConfig -> {
 					logoutConfig

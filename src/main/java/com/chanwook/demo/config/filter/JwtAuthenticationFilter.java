@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.chanwook.demo.config.service.JwtService;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -37,18 +38,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		accessToken = authHeader.substring(7);
-		userEmail = jwtService.extractUsername(accessToken);
-		if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-			if (jwtService.isTokenValid(accessToken, userDetails)) {
-				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-						null, userDetails.getAuthorities());
-				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(authToken);
-
+		try {
+			userEmail = jwtService.extractUsername(accessToken); // 만료시 ExpiredJwtException
+			if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+				if (jwtService.isTokenValid(accessToken, userDetails)) {
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+							null, userDetails.getAuthorities());
+					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authToken);
+				}
 			}
+			filterChain.doFilter(request, response);
+		} catch (ExpiredJwtException e) {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
-		filterChain.doFilter(request, response);
 	}
 
 }
