@@ -32,8 +32,7 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**").disable())
 
 				.authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-						.antMatchers("/",  "/auth/**", "/h2-console/**").permitAll()
-						.anyRequest().authenticated())
+						.antMatchers("/", "/auth/**", "/h2-console/**").permitAll().anyRequest().authenticated())
 
 				.authenticationProvider(authenticationProvider)
 
@@ -41,15 +40,13 @@ public class SecurityConfig {
 						(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-				.exceptionHandling(exceptionHeadler -> exceptionHeadler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+				.exceptionHandling(
+						exceptionHeadler -> exceptionHeadler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
 				.logout(logoutConfig -> {
-					logoutConfig
-					.logoutUrl("/auth/logout")
-					.addLogoutHandler(logoutService)
-					.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
-				})
-				.headers((headers) -> headers.frameOptions().disable());
+					logoutConfig.logoutUrl("/auth/logout").addLogoutHandler(logoutService).logoutSuccessHandler(
+							(request, response, authentication) -> SecurityContextHolder.clearContext());
+				}).headers((headers) -> headers.frameOptions().disable());
 		return http.build();
 	}
 }
