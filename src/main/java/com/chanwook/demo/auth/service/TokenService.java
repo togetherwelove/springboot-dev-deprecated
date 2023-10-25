@@ -35,6 +35,7 @@ public class TokenService {
 		String accessToken = jwtService.generateToken(user);
 		String refreshToken = jwtService.generateRefreshToken(user);
 		revokeAllUserTokens(user);
+		saveToken(user, accessToken);
 		saveToken(user, refreshToken);
 		return new TokenVO(accessToken, refreshToken);
 	}

@@ -1,4 +1,4 @@
-package com.chanwook.demo.config.service;
+package com.chanwook.demo.auth.service;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.chanwook.demo.auth.Token;
 import com.chanwook.demo.auth.repository.TokenRepository;
+import com.chanwook.demo.config.service.JwtService;
 
 import lombok.RequiredArgsConstructor;
 

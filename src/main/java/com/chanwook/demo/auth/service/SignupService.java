@@ -33,5 +33,4 @@ public class SignupService {
 	            .role(Role.user)
 	            .build();
 	}
-
 }

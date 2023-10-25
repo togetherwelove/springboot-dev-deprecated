@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final TokenService tokenService;
 	private final SignupService signupService;
-	
-	@GetMapping("/test")
-	public String test() {
-		return "test";
-	}
 
 	// authentication : 로그인, 인증
 	// authority : 회원가입, 인가
