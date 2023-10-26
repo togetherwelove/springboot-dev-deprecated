@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.chanwook.demo.auth.service.LogoutService;
-import com.chanwook.demo.config.entrypoint.JwtAuthenticationEntryPoint;
 import com.chanwook.demo.config.filter.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -30,31 +29,35 @@ public class SecurityConfig {
 	private final LogoutService logoutService;
 	private final AuthenticationProvider authenticationProvider;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http
 		.cors(Customizer.withDefaults())
-		.csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**").disable())
+		.csrf(csrf -> csrf
+			.ignoringAntMatchers("/h2-console/**").disable())
 
-				.authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-						.antMatchers("/auth/**", "/h2-console/**").permitAll().anyRequest().authenticated())
+		.authorizeHttpRequests((authorizeRequest) -> authorizeRequest
+			.antMatchers("/auth/**", "/h2-console/**").permitAll()
+			.anyRequest().authenticated())
 
-				.authenticationProvider(authenticationProvider)
+		.authenticationProvider(authenticationProvider)
 
-				.sessionManagement(
-						(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.sessionManagement((sessionManagement) -> sessionManagement
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-				.exceptionHandling(
-						exceptionHeadler -> exceptionHeadler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+		.logout((logoutConfig) -> logoutConfig
+			.logoutUrl("/auth/logout")
+			.addLogoutHandler(logoutService)
+			.logoutSuccessHandler((request, response, authentication) ->
+				SecurityContextHolder.clearContext()))
 
-				.logout(logoutConfig -> {
-					logoutConfig.logoutUrl("/auth/logout").addLogoutHandler(logoutService).logoutSuccessHandler(
-							(request, response, authentication) -> SecurityContextHolder.clearContext());
-				}).headers((headers) -> headers.frameOptions().disable());
+		.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+		.headers((headers) -> headers
+			.frameOptions().disable());
+
 		return http.build();
 	}
 

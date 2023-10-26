@@ -1,8 +1,9 @@
-package com.chanwook.demo.auth.api.dto;
+package com.chanwook.demo.auth.api.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

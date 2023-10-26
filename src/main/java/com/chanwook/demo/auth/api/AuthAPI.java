@@ -1,6 +1,7 @@
 package com.chanwook.demo.auth.api;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,32 +14,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chanwook.demo.auth.api.dto.LoginRequest;
-import com.chanwook.demo.auth.api.dto.SignupRequest;
-import com.chanwook.demo.auth.api.dto.TokenVO;
-import com.chanwook.demo.auth.service.SignupService;
+import com.chanwook.demo.auth.api.vo.LoginVO;
+import com.chanwook.demo.auth.api.vo.TokenVO;
 import com.chanwook.demo.auth.service.TokenService;
-import com.chanwook.demo.user.User;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthAPI {
 	private final TokenService tokenService;
-	private final SignupService signupService;
 
 	// authentication : 로그인, 인증
 	// authority : 회원가입, 인가
 	@PostMapping("/login")
-	public ResponseEntity<TokenVO> authenticate(@RequestBody LoginRequest login) {
+	public ResponseEntity<TokenVO> authenticate(@RequestBody LoginVO login) {
 
-		User user = User.builder()
-				.email(login.getEmail())
-				.password(login.getPassword())
-				.build();
-		TokenVO authResponse = tokenService.authenticate(user);
+		TokenVO authResponse = tokenService.authenticate(login);
 
 		ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
 				.httpOnly(true)
@@ -50,18 +43,16 @@ public class AuthController {
 
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
 				.body(new TokenVO(authResponse.getAccessToken(), null));
-
-	}
-
-	@PostMapping("/signup")
-	public ResponseEntity<User> authorize(@RequestBody SignupRequest signup) {
-		User user = signupService.signup(signup);
-		return ResponseEntity.ok().body(user);
 	}
 
 	@PostMapping("/refresh")
-	public void refreshToken(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) throws IOException {
-		tokenService.refreshToken(refreshToken, response);
+	public ResponseEntity<TokenVO> refreshToken(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) throws IOException {
+		String accessToken = "";
+		Optional<String> refreshedAccessToken = tokenService.refreshToken(refreshToken, response);
+		if (refreshedAccessToken.isPresent()) {
+			accessToken = refreshedAccessToken.get();
+		}
+		return ResponseEntity.ok().body(new TokenVO(accessToken, null));
 	}
 	// logout은 SecurityConfig에 "auth/logout/"으로 설정되어있음
 }

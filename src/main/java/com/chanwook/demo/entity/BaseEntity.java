@@ -1,4 +1,4 @@
-package com.chanwook.demo.model;
+package com.chanwook.demo.entity;
 
 import java.time.LocalDateTime;
 

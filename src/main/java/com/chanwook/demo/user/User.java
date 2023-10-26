@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.chanwook.demo.model.BaseEntity;
+import com.chanwook.demo.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

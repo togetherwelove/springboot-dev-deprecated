@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.chanwook.demo.auth.Token;
 import com.chanwook.demo.auth.repository.TokenRepository;
@@ -31,21 +31,20 @@ public class LogoutService implements LogoutHandler {
 			return;
 		}
 		token = authHeader.substring(7);
-		if (!ObjectUtils.isEmpty(token)) {
-			final String userEmail = jwtService.extractUsername(token);
-			revokeAllUserTokens(userEmail);
+		if (StringUtils.hasText(token)) {
+			final String username = jwtService.extractUsername(token);
+			revokeAllUserTokens(username);
 		}
 	}
 
-	private void revokeAllUserTokens(String userEmail) {
-		List<Token> validTokens = tokenRepository.findAllValidTokenByUsername(userEmail);
+	private void revokeAllUserTokens(String username) {
+		List<Token> validTokens = tokenRepository.findAllValidTokenByUsername(username);
 		if (!validTokens.isEmpty()) {
 			validTokens.forEach(t -> {
 				t.setExpired(true);
 				t.setRevoked(true);
+				tokenRepository.save(t);
 			});
 		}
-		tokenRepository.saveAll(validTokens);
 	}
-
 }
