@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthRest {
+public class AuthRestController {
 	private final AuthService tokenService;
 
 	// authentication : 로그인, 인증
@@ -55,5 +55,6 @@ public class AuthRest {
 		}
 		return ResponseEntity.ok().body(new AuthResponse(accessToken));
 	}
+
 	// logout은 SecurityConfig에 "auth/logout/"으로 설정되어있음
 }

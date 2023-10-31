@@ -1,4 +1,4 @@
-package com.chanwook.demo.domain;
+package com.chanwook.demo.domain.auth.api;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.chanwook.demo.domain.auth.User;
-import com.chanwook.demo.domain.auth.api.InvalidInputException;
 import com.chanwook.demo.domain.auth.api.service.SignupService;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 import com.chanwook.demo.domain.auth.infra.SmtpPort;
@@ -41,7 +41,8 @@ public class SignupUsecaseTest {
 
 	@ParameterizedTest
 	@MethodSource("commandProvider")
-	void signup_checkRequired(UserSignupCommand command) {
+	@DisplayName("회원사입 시 필수값 검증 테스트")
+	void checkRequired(UserSignupCommand command) {
 		assertThrowsExactly(InvalidInputException.class, () -> signupService.checkRequired(command), "");
 	}
 
@@ -65,7 +66,8 @@ public class SignupUsecaseTest {
 	}
 
 	@Test
-	public void signup_invaildEmail() {
+	@DisplayName("회원가입 시 이메일 유효성 검증 테스트")
+	public void invaildEmail() {
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("useruser.dev")
 				.password("1234qwer")
@@ -77,7 +79,8 @@ public class SignupUsecaseTest {
 	}
 
 	@Test
-	public void signup_invaildPassword() {
+	@DisplayName("회원가입 시 비밀번호 유효성 검증 테스트")
+	public void invaildPassword() {
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwerasdf")
@@ -89,7 +92,8 @@ public class SignupUsecaseTest {
 	}
 
 	@Test
-	public void signup_notMatchedPassword() {
+	@DisplayName("회원가입 시 비밀번호 불일치 검증 테스트")
+	public void invaildPasswordVerify() {
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwer1234")
@@ -101,19 +105,8 @@ public class SignupUsecaseTest {
 	}
 
 	@Test
-	public void signup_invaildPasswordVerify() {
-		UserSignupCommand command = UserSignupCommand.builder()
-				.email("user@user.dev")
-				.password("qwer")
-				.passwordVerify("qwer1234")
-				.build();
-		assertThrowsExactly(InvalidInputException.class, () -> signupService.requestSignup(command), "");
-		verify(signupCommandPort, times(0)).addUser(any());
-		verify(smtpPort, times(0)).send(any());
-	}
-
-	@Test
-	public void signup_failAddUser() {
+	@DisplayName("회원가입 실패 테스트")
+	public void failAddUser() {
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwer1234")
@@ -125,7 +118,8 @@ public class SignupUsecaseTest {
 	}
 
 	@Test
-	public void signup_sendMail() {
+	@DisplayName("회원가입 시 이메일 전송 테스트")
+	public void sendMail() {
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwer1234")
