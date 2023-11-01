@@ -20,9 +20,14 @@ public class SignupRestController {
 
 	private final SignupUsecase signupService;
 
-	@PostMapping("/check")
+	@PostMapping("/checkRequired")
 	public void checkRequired(@RequestBody SignupRequest dto) {
 		signupService.checkRequired(commandMapper.apply(dto));
+	}
+	
+	@PostMapping("/checkDuplicated")
+	public void checkDuplicated(@RequestBody SignupRequest dto) {
+		signupService.checkDuplicated(commandMapper.apply(dto));
 	}
 
 	@PostMapping("/request")

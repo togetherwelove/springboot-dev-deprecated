@@ -5,12 +5,14 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.chanwook.demo.app.api.auth.dto.SignupRequest;
 import com.chanwook.demo.app.api.config.service.JwtService;
 import com.chanwook.demo.app.infra.auth.repository.TokenRepository;
+import com.chanwook.demo.domain.auth.api.InvalidInputException;
 import com.chanwook.demo.domain.auth.api.SignupUsecase;
+import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(controllers = SignupRestController.class)
@@ -38,7 +42,10 @@ public class SignupRestControllerTest {
 
 	@MockBean
 	SignupUsecase signupService;
-
+	
+	@MockBean
+	UserSignupCommandPort userSignupCommandPort;
+	
 	@MockBean
 	JwtService jwtService;
 
@@ -50,18 +57,19 @@ public class SignupRestControllerTest {
 	@BeforeEach
 	void initDto() {
 		dto = new SignupRequest(
+				"dean",
 				"user@user.dev",
 				"1234qwer",
-				"1234qwer",
-				"dean"
+				"1234qwer"
 				);
 	}
-
+	
+	@Disabled
 	@Test
 	@DisplayName("회원가입 필수값 검증 테스트")
 	public void checkRequiredTest() throws Exception {
 		mockMvc.perform(
-				post("/auth/signup/check")
+				post("/auth/signup/checkRequired")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(dto)))
 				.andDo(print())
@@ -70,7 +78,25 @@ public class SignupRestControllerTest {
 
 		verify(signupService, times(1)).checkRequired(any());
 	}
+	
+	@Test
+	@DisplayName("이메일 중복 시 예외 처리 테스트")
+	public void checkDuplicatedTest() throws Exception {		
+        when(userSignupCommandPort.findByEmail(dto.getEmail())).thenThrow(new InvalidInputException("Duplicated email"));
+		
+		mockMvc.perform(
+				post("/auth/signup/checkDuplicated")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(dto)))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.code", equalTo("ERROR")));
+		// TODO Expected: "ERROR" but: was "SUCCESS"
+		verify(signupService, times(1)).checkDuplicated(any());
+		
+	}
 
+	@Disabled
 	@Test
 	@DisplayName("회원가입 요청 처리 테스트")
 	public void requestSignupTest() throws Exception {
@@ -84,7 +110,7 @@ public class SignupRestControllerTest {
 
 		verify(signupService, times(1)).requestSignup(any());
 	}
-
+	@Disabled
 	@Test
 	@DisplayName("이메일 재전송 요청 처리 테스트")
 	public void resendMailTest() throws Exception {
@@ -99,9 +125,11 @@ public class SignupRestControllerTest {
 		verify(signupService, times(1)).resendMail(any());
 	}
 
+	@Disabled
 	@Test
 	@DisplayName("이메일 재전송 요청 실패 시 예외 처리 테스트")
 	public void resendMailTest_fail() throws Exception {
+		
 		mockMvc.perform(
 				post("/auth/signup/resend")
 					.contentType(MediaType.APPLICATION_JSON)

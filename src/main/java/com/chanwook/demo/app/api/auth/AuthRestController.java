@@ -47,12 +47,10 @@ public class AuthRestController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<AuthResponse> refreshToken(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) throws IOException {
+	public ResponseEntity<AuthResponse> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) throws IOException {
 		String accessToken = "";
 		Optional<String> refreshedAccessToken = tokenService.refreshToken(refreshToken, response);
-		if (refreshedAccessToken.isPresent()) {
-			accessToken = refreshedAccessToken.get();
-		}
+		if (refreshedAccessToken.isPresent()) accessToken = refreshedAccessToken.get();
 		return ResponseEntity.ok().body(new AuthResponse(accessToken));
 	}
 
