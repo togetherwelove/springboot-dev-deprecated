@@ -31,8 +31,8 @@ public class UserSignupCommandAdaptor implements UserSignupCommandPort {
 	}
 	
 	@Override
-	public Optional<User> findByEmail(String email) {
-		Users users = userRepository.findByEmail(email).get();
+	public Optional<User> findByEmail(User user) {
+		Users users = userRepository.findByEmail(user.getEmail()).orElse(null);
 		return ObjectUtils.isEmpty(users) ? Optional.empty() : Optional.of(userMapper.apply(users));
 	}
 

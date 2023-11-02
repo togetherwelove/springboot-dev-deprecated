@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SignupService implements SignupUsecase {
 
-	private final UserSignupCommandPort signupCommandPort;
+	private final UserSignupCommandPort userSignupCommandPort;
 	private final SmtpPort smtpPort;
 
 	@Override
@@ -32,21 +32,22 @@ public class SignupService implements SignupUsecase {
 				|| !StringUtils.hasText(signup.getPasswordVerify()))
 			throw new InvalidInputException("입력값이 없습니다.");
 	}
-	
-	@Override
-	public void checkDuplicated(UserSignupCommand signup) {
-		Optional<User> user = signupCommandPort.findByEmail(signup.getEmail());
-		if (user.isPresent())
-			throw new InvalidInputException("이미 존재하는 이메일입니다.");
-	}
 
 	@Override
 	public void requestSignup(UserSignupCommand signup) {
 		verifyRequest(signup);
-		Optional<User> user = signupCommandPort.addUser(userMapper.apply(signup));
-		if (!user.isPresent())
+		checkDuplicated(signup);
+		Optional<User> addedUser = userSignupCommandPort.addUser(userMapper.apply(signup));
+		if (!addedUser.isPresent())
 			throw new UserSignupException("회원 등록에 실패하였습니다.");
-		smtpPort.send(user.get().getEmail());
+		smtpPort.send(addedUser.get().getEmail());
+	}
+
+	private void checkDuplicated(UserSignupCommand signup) {
+		Optional<User> user = userSignupCommandPort.findByEmail(userMapper.apply(signup));
+		if (user.isPresent()) {
+			throw new UserSignupException("이미 등록된 회원 이메일입니다.");
+		}
 	}
 
 	private void verifyRequest(UserSignupCommand signup) {

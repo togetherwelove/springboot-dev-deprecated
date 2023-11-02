@@ -105,8 +105,7 @@ public class SignupUsecaseTest {
 				.password("qwer1234")
 				.passwordVerify("asdf1234")
 				.build();
-		assertThrowsExactly(InvalidInputException.class, () ->
-		signupService.requestSignup(command), "");
+		assertThrowsExactly(InvalidInputException.class, () -> signupService.requestSignup(command), "");
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
@@ -143,20 +142,18 @@ public class SignupUsecaseTest {
 	}
 	
 	@Test
-	@DisplayName("회원가입 이메일 중복 확인 테스트")
-	public void UserDuplicateTest() {
+	@DisplayName("회원가입 시 이메일 중복 처리 테스트")
+	public void duplicatedUser() {
 		UserSignupCommand command = UserSignupCommand.builder()
-                .email("user@user.dev")
-                .password("qwer1234")
-                .passwordVerify("qwer1234")
-                .build();
+				.email("user@user.dev")
+				.password("qwer1234")
+				.passwordVerify("qwer1234")
+				.build();
 
-        when(userSignupCommandPort.findByEmail(command.getEmail()))
-        .thenReturn(Optional.of(User.builder().build()));
-        
-		assertThrowsExactly(InvalidInputException.class, () ->
-		signupService.checkDuplicated(command), "");
-        
+		when(userSignupCommandPort.findByEmail(any())).thenReturn(Optional.of(User.builder().build()));
+		
+		assertThrowsExactly(UserSignupException.class, () -> signupService.requestSignup(command), "");
+		
 		verify(userSignupCommandPort, times(1)).findByEmail(any());
 	}
 }

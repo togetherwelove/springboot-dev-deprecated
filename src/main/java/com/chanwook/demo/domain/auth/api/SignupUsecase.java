@@ -13,17 +13,6 @@ public interface SignupUsecase {
      * @param UserSignupCommand
      */
 	void checkRequired(UserSignupCommand signup);
-	
-	/**
-     * 이메일 중복 체크
-     *
-     * <ol>
-     * <li>회원가입 이메일 중복 확인</li>
-     * </ol>
-     *
-     * @param UserSignupCommand
-     */
-	void checkDuplicated(UserSignupCommand signup);
 
 	/**
      * 회원 생성 요청
