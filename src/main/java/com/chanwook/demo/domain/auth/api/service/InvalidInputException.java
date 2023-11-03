@@ -1,4 +1,4 @@
-package com.chanwook.demo.domain.auth.api;
+package com.chanwook.demo.domain.auth.api.service;
 
 public class InvalidInputException extends RuntimeException {
 	/**

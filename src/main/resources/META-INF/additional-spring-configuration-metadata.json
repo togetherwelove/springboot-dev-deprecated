@@ -13,5 +13,10 @@
     "name": "application.security.jwt.refresh-token.expiration",
     "type": "java.lang.String",
     "description": "expiration time of refresh token"
+  },
+  {
+    "name": "spring.mail.auth-code-expiration",
+    "type": "java.lang.String",
+    "description": "expiration time of mail auth code'"
   }
 ]}

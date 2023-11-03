@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chanwook.demo.app.api.auth.dto.SignupRequest;
-import com.chanwook.demo.domain.auth.api.SignupUsecase;
+import com.chanwook.demo.domain.auth.api.UserSignupCommandUsecase;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SignupRestController {
 
-	private final SignupUsecase signupService;
+	private final UserSignupCommandUsecase signupService;
 
 	@PostMapping("/check")
 	public void checkRequired(@RequestBody SignupRequest dto) {
@@ -41,3 +41,4 @@ public class SignupRestController {
 			req.getPassword(),
 			req.getPasswordVerify());
 }
+

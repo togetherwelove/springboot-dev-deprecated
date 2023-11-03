@@ -12,17 +12,19 @@ import com.chanwook.demo.app.infra.auth.repository.entity.type.TokenType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Entity
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-public class Tokens {
+public class Tokens extends BaseEntity {
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id private long id;

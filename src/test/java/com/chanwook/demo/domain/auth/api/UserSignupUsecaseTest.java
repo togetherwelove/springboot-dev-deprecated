@@ -21,17 +21,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.chanwook.demo.domain.auth.User;
-import com.chanwook.demo.domain.auth.api.service.SignupService;
+import com.chanwook.demo.domain.auth.api.service.UserSignupCommandService;
+import com.chanwook.demo.domain.auth.api.service.InvalidInputException;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 import com.chanwook.demo.domain.auth.infra.SmtpPort;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
-import com.chanwook.demo.domain.auth.infra.UserSignupException;
+import com.chanwook.demo.domain.auth.infra.UserSignupCommandException;
 
 @ExtendWith(MockitoExtension.class)
-public class SignupUsecaseTest {
+public class UserSignupUsecaseTest {
 
 	@InjectMocks
-	SignupService signupService;
+	UserSignupCommandService userSignupCommandService;
 
 	@Mock
 	UserSignupCommandPort userSignupCommandPort;
@@ -44,7 +45,7 @@ public class SignupUsecaseTest {
 	@DisplayName("회원사입 시 필수값 검증 테스트")
 	void checkRequired(UserSignupCommand command) {
 		assertThrowsExactly(InvalidInputException.class, () -> 
-		signupService.checkRequired(command), "");
+		userSignupCommandService.checkRequired(command), "");
 	}
 
 	public static Stream<Arguments> commandProvider() {
@@ -78,7 +79,7 @@ public class SignupUsecaseTest {
 				.passwordVerify("1234qwer")
 				.build();
 		assertThrowsExactly(InvalidInputException.class, () ->
-		signupService.requestSignup(command), "");
+		userSignupCommandService.requestSignup(command), "");
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
@@ -92,7 +93,7 @@ public class SignupUsecaseTest {
 				.passwordVerify("qwerasdf")
 				.build();
 		assertThrowsExactly(InvalidInputException.class, () ->
-		signupService.requestSignup(command), "");
+		userSignupCommandService.requestSignup(command), "");
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
@@ -105,7 +106,7 @@ public class SignupUsecaseTest {
 				.password("qwer1234")
 				.passwordVerify("asdf1234")
 				.build();
-		assertThrowsExactly(InvalidInputException.class, () -> signupService.requestSignup(command), "");
+		assertThrowsExactly(InvalidInputException.class, () -> userSignupCommandService.requestSignup(command), "");
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
@@ -118,8 +119,8 @@ public class SignupUsecaseTest {
 				.password("qwer1234")
 				.passwordVerify("qwer1234")
 				.build();
-		assertThrowsExactly(UserSignupException.class, () ->
-		signupService.requestSignup(command), "");
+		assertThrowsExactly(UserSignupCommandException.class, () ->
+		userSignupCommandService.requestSignup(command), "");
 		verify(userSignupCommandPort, times(1)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
@@ -135,7 +136,7 @@ public class SignupUsecaseTest {
 
 		when(userSignupCommandPort.addUser(any())).thenReturn(Optional.of(User.builder().build()));
 
-		signupService.requestSignup(command);
+		userSignupCommandService.requestSignup(command);
 
 		verify(userSignupCommandPort, times(1)).addUser(any());
 		verify(smtpPort, times(1)).send(any());
@@ -152,7 +153,7 @@ public class SignupUsecaseTest {
 
 		when(userSignupCommandPort.findByEmail(any())).thenReturn(Optional.of(User.builder().build()));
 		
-		assertThrowsExactly(UserSignupException.class, () -> signupService.requestSignup(command), "");
+		assertThrowsExactly(UserSignupCommandException.class, () -> userSignupCommandService.requestSignup(command), "");
 		
 		verify(userSignupCommandPort, times(1)).findByEmail(any());
 	}
