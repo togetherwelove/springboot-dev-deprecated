@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.chanwook.demo.app.api.auth.dto.SignupRequest;
 import com.chanwook.demo.app.api.config.service.JwtService;
 import com.chanwook.demo.app.infra.auth.repository.TokenRepository;
-import com.chanwook.demo.domain.auth.api.UserSignupCommandUsecase;
+import com.chanwook.demo.domain.auth.api.UserSignupUsecase;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,11 +38,11 @@ public class SignupRestControllerTest {
 	ObjectMapper objectMapper;
 
 	@MockBean
-	UserSignupCommandUsecase signupService;
-	
+	UserSignupUsecase signupService;
+
 	@MockBean
 	UserSignupCommandPort userSignupCommandPort;
-	
+
 	@MockBean
 	JwtService jwtService;
 
@@ -60,12 +60,12 @@ public class SignupRestControllerTest {
 				"1234qwer"
 				);
 	}
-	
+
 	@Test
-	@DisplayName("회원가입 필수값 검증 테스트")
-	public void checkRequiredTest() throws Exception {
+	@DisplayName("입력 필수값 체크 (성공)")
+	public void check() throws Exception {
 		mockMvc.perform(
-				post("/auth/signup/checkRequired")
+				post("/auth/signup/check")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(dto)))
 				.andDo(print())
@@ -76,8 +76,8 @@ public class SignupRestControllerTest {
 	}
 
 	@Test
-	@DisplayName("회원가입 요청 처리 테스트")
-	public void requestSignupTest() throws Exception {
+	@DisplayName("회원가입 요청 (성공)")
+	public void request() throws Exception {
 		mockMvc.perform(
 				post("/auth/signup/request")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -90,10 +90,10 @@ public class SignupRestControllerTest {
 	}
 
 	@Test
-	@DisplayName("이메일 재전송 요청 처리 테스트")
-	public void resendMailTest() throws Exception {
+	@DisplayName("이메일 재전송 요청 (성공)")
+	public void resend() throws Exception {
 		mockMvc.perform(
-				post("/auth/signup/resend/")
+				post("/auth/signup/resend")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content("user@user.dev"))
 				.andDo(print())
@@ -104,9 +104,9 @@ public class SignupRestControllerTest {
 	}
 
 	@Test
-	@DisplayName("이메일 재전송 요청 실패 시 예외 처리 테스트")
+	@DisplayName("이메일 재전송 요청 (실패)")
 	public void resendMailTest_fail() throws Exception {
-		
+
 		mockMvc.perform(
 				post("/auth/signup/resend")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -118,5 +118,5 @@ public class SignupRestControllerTest {
 
 		verify(signupService, times(0)).resendMail(any());
 	}
-	
+
 }

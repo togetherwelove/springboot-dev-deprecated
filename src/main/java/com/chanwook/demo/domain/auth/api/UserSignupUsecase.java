@@ -1,10 +1,8 @@
 package com.chanwook.demo.domain.auth.api;
 
-import java.security.NoSuchAlgorithmException;
-
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 
-public interface UserSignupCommandUsecase {
+public interface UserSignupUsecase {
 	/**
      * 회원가입 링크 선택
      *

@@ -39,7 +39,7 @@ public class SecurityConfig {
 			.ignoringAntMatchers("/h2-console/**").disable())
 
 		.authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-			.antMatchers("/auth/**", "/signup/**", "/h2-console/**").permitAll()
+			.antMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
 			.anyRequest().authenticated())
 
 		.authenticationProvider(authenticationProvider)

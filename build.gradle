@@ -67,6 +67,9 @@ dependencies {
             "javax.persistence:javax.persistence-api",
             "javax.annotation:javax.annotation-api",
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+            
+    // swagger
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
 }
 
 tasks.named('test') {

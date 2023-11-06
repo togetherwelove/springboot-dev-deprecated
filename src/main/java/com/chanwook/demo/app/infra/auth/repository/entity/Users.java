@@ -29,6 +29,7 @@ public class Users extends BaseEntity implements UserDetails {
 
 	@Column(unique = true)
 	private String email;
+	
 	private String password;
 	private String name;
 

@@ -19,6 +19,7 @@ import com.chanwook.demo.app.api.auth.dto.AuthResponse;
 import com.chanwook.demo.app.api.auth.service.AuthService;
 import com.chanwook.demo.app.api.auth.service.vo.AuthVO;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,6 +30,7 @@ public class AuthRestController {
 
 	// authentication : 로그인, 인증
 	// authority : 회원가입, 인가
+	@Operation(summary = "로그인", description = "로그인 후 토큰 발급", tags = {"로그인"})
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest login) {
 
@@ -46,6 +48,7 @@ public class AuthRestController {
 				.body(new AuthResponse(authResponse.getAccessToken()));
 	}
 
+	@Operation(summary = "토큰 재발급", description = "엑세스 토큰 만료 시 재발급", tags = {"로그인"})
 	@PostMapping("/refresh")
 	public ResponseEntity<AuthResponse> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) throws IOException {
 		String accessToken = "";

@@ -18,22 +18,19 @@ spring:
         format-sql: true
     hibernate:
       ddl-auto: create-drop
-  mail:
-    host: smtp.gamil.com
-    port: 587
-    username: rkdcksdnr1@gmail.com
-    password: prxpljvteitdasog
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-    auth-code-expiration: 300000
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    use-root-path: true
+  show-actuator: true
+  group-configs:
+    - group: auth
+      paths-to-match: /auth/**
+  cache:
+    disabled: true
 
 application:
   security:

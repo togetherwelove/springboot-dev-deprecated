@@ -29,12 +29,6 @@ public class UserSignupCommandAdaptor implements UserSignupCommandPort {
 		Users users = userRepository.save(usersMapper.apply(user));
 		return ObjectUtils.isEmpty(users) ? Optional.empty() : Optional.of(userMapper.apply(users));
 	}
-	
-	@Override
-	public Optional<User> findByEmail(User user) {
-		Users users = userRepository.findByEmail(user.getEmail()).orElse(null);
-		return ObjectUtils.isEmpty(users) ? Optional.empty() : Optional.of(userMapper.apply(users));
-	}
 
     Function<User, Users> usersMapper = user -> Users.builder()
             .email(user.getEmail())

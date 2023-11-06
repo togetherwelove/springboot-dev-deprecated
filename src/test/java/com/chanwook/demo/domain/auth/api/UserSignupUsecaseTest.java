@@ -21,18 +21,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.chanwook.demo.domain.auth.User;
-import com.chanwook.demo.domain.auth.api.service.UserSignupCommandService;
 import com.chanwook.demo.domain.auth.api.service.InvalidInputException;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
+import com.chanwook.demo.domain.auth.api.service.UserSignupService;
 import com.chanwook.demo.domain.auth.infra.SmtpPort;
+import com.chanwook.demo.domain.auth.infra.UserRequsetException;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
-import com.chanwook.demo.domain.auth.infra.UserSignupCommandException;
 
 @ExtendWith(MockitoExtension.class)
 public class UserSignupUsecaseTest {
 
 	@InjectMocks
-	UserSignupCommandService userSignupCommandService;
+	UserSignupService userSignupService;
 
 	@Mock
 	UserSignupCommandPort userSignupCommandPort;
@@ -42,10 +42,10 @@ public class UserSignupUsecaseTest {
 
 	@ParameterizedTest
 	@MethodSource("commandProvider")
-	@DisplayName("회원사입 시 필수값 검증 테스트")
+	@DisplayName("필수값이 null일 때")
 	void checkRequired(UserSignupCommand command) {
-		assertThrowsExactly(InvalidInputException.class, () -> 
-		userSignupCommandService.checkRequired(command), "");
+		assertThrowsExactly(InvalidInputException.class, () ->
+		userSignupService.checkRequired(command), "");
 	}
 
 	public static Stream<Arguments> commandProvider() {
@@ -71,62 +71,75 @@ public class UserSignupUsecaseTest {
 	}
 
 	@Test
-	@DisplayName("회원가입 시 이메일 유효성 검증 테스트")
+	@DisplayName("이메일이 유효하지 않을 때")
 	public void invaildEmail() {
+
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("useruser.dev")
 				.password("1234qwer")
 				.passwordVerify("1234qwer")
 				.build();
+
 		assertThrowsExactly(InvalidInputException.class, () ->
-		userSignupCommandService.requestSignup(command), "");
+		userSignupService.requestSignup(command), "");
+
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
 
 	@Test
-	@DisplayName("회원가입 시 비밀번호 유효성 검증 테스트")
+	@DisplayName("비밀번호가 유효하지 않을 때")
 	public void invaildPassword() {
+
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwerasdf")
 				.passwordVerify("qwerasdf")
 				.build();
+
 		assertThrowsExactly(InvalidInputException.class, () ->
-		userSignupCommandService.requestSignup(command), "");
+		userSignupService.requestSignup(command), "");
+
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
 
 	@Test
-	@DisplayName("회원가입 시 비밀번호 불일치 검증 테스트")
-	public void invaildPasswordVerify() {
+	@DisplayName("비밀번호가 불일치할 때")
+	public void notMatchedPasswordVerify() {
+
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwer1234")
 				.passwordVerify("asdf1234")
 				.build();
-		assertThrowsExactly(InvalidInputException.class, () -> userSignupCommandService.requestSignup(command), "");
+
+		assertThrowsExactly(InvalidInputException.class, () ->
+		userSignupService.requestSignup(command), "");
+
 		verify(userSignupCommandPort, times(0)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
 
 	@Test
-	@DisplayName("회원가입 실패 테스트")
+	@DisplayName("회원가입 시도했을 때")
 	public void failAddUser() {
+
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
 				.password("qwer1234")
 				.passwordVerify("qwer1234")
 				.build();
-		assertThrowsExactly(UserSignupCommandException.class, () ->
-		userSignupCommandService.requestSignup(command), "");
+
+		assertThrowsExactly(UserRequsetException.class, () ->
+		userSignupService.requestSignup(command), "");
+
 		verify(userSignupCommandPort, times(1)).addUser(any());
 		verify(smtpPort, times(0)).send(any());
 	}
 
 	@Test
-	@DisplayName("회원가입 시 이메일 전송 테스트")
+	@DisplayName("이메일을 전송했을 때")
 	public void sendMail() {
 		UserSignupCommand command = UserSignupCommand.builder()
 				.email("user@user.dev")
@@ -136,25 +149,9 @@ public class UserSignupUsecaseTest {
 
 		when(userSignupCommandPort.addUser(any())).thenReturn(Optional.of(User.builder().build()));
 
-		userSignupCommandService.requestSignup(command);
+		userSignupService.requestSignup(command);
 
 		verify(userSignupCommandPort, times(1)).addUser(any());
 		verify(smtpPort, times(1)).send(any());
-	}
-	
-	@Test
-	@DisplayName("회원가입 시 이메일 중복 처리 테스트")
-	public void duplicatedUser() {
-		UserSignupCommand command = UserSignupCommand.builder()
-				.email("user@user.dev")
-				.password("qwer1234")
-				.passwordVerify("qwer1234")
-				.build();
-
-		when(userSignupCommandPort.findByEmail(any())).thenReturn(Optional.of(User.builder().build()));
-		
-		assertThrowsExactly(UserSignupCommandException.class, () -> userSignupCommandService.requestSignup(command), "");
-		
-		verify(userSignupCommandPort, times(1)).findByEmail(any());
 	}
 }
