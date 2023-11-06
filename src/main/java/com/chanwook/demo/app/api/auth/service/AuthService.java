@@ -39,8 +39,8 @@ public class AuthService {
 				.email(login.getEmail())
 				.password(login.getPassword())
 				.build();
-		
-		try {			
+
+		try {
 			authenticationManager
 			.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		} catch (BadCredentialsException e) {

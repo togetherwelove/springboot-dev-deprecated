@@ -25,8 +25,8 @@ import com.chanwook.demo.domain.auth.api.service.InvalidInputException;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 import com.chanwook.demo.domain.auth.api.service.UserSignupService;
 import com.chanwook.demo.domain.auth.infra.SmtpPort;
-import com.chanwook.demo.domain.auth.infra.UserSignupRequsetException;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
+import com.chanwook.demo.domain.auth.infra.UserSignupRequsetException;
 
 @ExtendWith(MockitoExtension.class)
 public class UserSignupUsecaseTest {
