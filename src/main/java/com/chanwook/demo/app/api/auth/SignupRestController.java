@@ -21,7 +21,7 @@ public class SignupRestController {
 
 	private final UserSignupUsecase signupService;
 
-	@Operation(summary = "회원가입 입력 필수값 체크", description = "이메일, 패스워드가 입력 됐는지 체크", tags = {"회원가입"})
+	@Operation(summary = "회원가입 입력 필수값 체크", description = "이메일, 패스워드, 패스워드(확인)가 입력 됐는지 체크", tags = {"회원가입"})
 	@PostMapping("/check")
 	public void checkRequired(@RequestBody SignupRequest dto) {
 		signupService.checkRequired(commandMapper.apply(dto));

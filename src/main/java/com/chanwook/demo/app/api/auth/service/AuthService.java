@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -19,6 +20,7 @@ import com.chanwook.demo.app.infra.auth.repository.UserRepository;
 import com.chanwook.demo.app.infra.auth.repository.entity.Tokens;
 import com.chanwook.demo.app.infra.auth.repository.entity.Users;
 import com.chanwook.demo.app.infra.auth.repository.entity.type.TokenType;
+import com.chanwook.demo.domain.auth.infra.UserSignupRequsetException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,9 +39,13 @@ public class AuthService {
 				.email(login.getEmail())
 				.password(login.getPassword())
 				.build();
-
-		authenticationManager
-		.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+		
+		try {			
+			authenticationManager
+			.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+		} catch (BadCredentialsException e) {
+			throw new UserSignupRequsetException("비밀번호가 불일치합니다.");
+		}
 
 		String accessToken = jwtService.generateToken(user);
 		String refreshToken = jwtService.generateRefreshToken(user);

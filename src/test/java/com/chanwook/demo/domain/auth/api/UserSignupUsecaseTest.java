@@ -25,7 +25,7 @@ import com.chanwook.demo.domain.auth.api.service.InvalidInputException;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 import com.chanwook.demo.domain.auth.api.service.UserSignupService;
 import com.chanwook.demo.domain.auth.infra.SmtpPort;
-import com.chanwook.demo.domain.auth.infra.UserRequsetException;
+import com.chanwook.demo.domain.auth.infra.UserSignupRequsetException;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
 
 @ExtendWith(MockitoExtension.class)
@@ -131,7 +131,7 @@ public class UserSignupUsecaseTest {
 				.passwordVerify("qwer1234")
 				.build();
 
-		assertThrowsExactly(UserRequsetException.class, () ->
+		assertThrowsExactly(UserSignupRequsetException.class, () ->
 		userSignupService.requestSignup(command), "");
 
 		verify(userSignupCommandPort, times(1)).addUser(any());

@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import com.chanwook.demo.domain.auth.User;
 import com.chanwook.demo.domain.auth.api.UserSignupUsecase;
 import com.chanwook.demo.domain.auth.infra.SmtpPort;
-import com.chanwook.demo.domain.auth.infra.UserRequsetException;
+import com.chanwook.demo.domain.auth.infra.UserSignupRequsetException;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
 
 import lombok.RequiredArgsConstructor;
@@ -45,11 +45,11 @@ public class UserSignupService implements UserSignupUsecase {
 		try {
 			addedUser = userSignupCommandPort.addUser(userMapper.apply(command));
 		} catch (Exception e) {
-			throw new UserRequsetException("이미 등록된 메일 주소입니다.");
+			throw new UserSignupRequsetException("이미 등록된 메일 주소입니다.");
 		}
 
 		if(!addedUser.isPresent())
-			throw new UserRequsetException("회원가입에 실패하였습니다.");
+			throw new UserSignupRequsetException("회원가입에 실패하였습니다.");
 
 		try {
 			smtpPort.send(addedUser.get().getEmail());
