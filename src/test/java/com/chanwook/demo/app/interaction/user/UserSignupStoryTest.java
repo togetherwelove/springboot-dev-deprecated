@@ -11,8 +11,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.chanwook.demo.application.api.config.DefaultResponseBody;
 import com.chanwook.demo.application.api.config.common.ResponseCodeEnum;
+import com.chanwook.demo.application.api.config.handler.DefaultResponseBody;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,6 +50,6 @@ public class UserSignupStoryTest {
 
 		assertEquals(ResponseCodeEnum.SUCCESS, requestSignupResponseBody.map(DefaultResponseBody::getCode).get());
 
-		// TODO 회원 삭제
+		// TODO 회원 삭제 기능 구현
 	}
 }

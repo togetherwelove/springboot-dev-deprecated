@@ -1,3 +1,7 @@
+server:
+  servlet:
+    contextPath: /api
+
 spring:
   h2:
     console:
@@ -17,7 +21,8 @@ spring:
         show-sql: true
         format-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+      
 springdoc:
   swagger-ui:
     display-request-duration: true
@@ -27,8 +32,12 @@ springdoc:
     use-root-path: true
   show-actuator: true
   group-configs:
+    - group: all
+      paths-to-match: /**
     - group: auth
       paths-to-match: /auth/**
+    - group: post
+      paths-to-match: /post/**
   cache:
     disabled: true
 

@@ -1,4 +1,4 @@
-package com.chanwook.demo.application.api.config;
+package com.chanwook.demo.application.api.config.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.chanwook.demo.application.api.config.common.ResponseCodeEnum;
 
-@ControllerAdvice(basePackages = "com.chanwook.demo.app.api")
+@ControllerAdvice(basePackages = "com.chanwook.demo.application.api")
 public class DefaultExceptionHandler {
 
 	@ExceptionHandler(Exception.class)

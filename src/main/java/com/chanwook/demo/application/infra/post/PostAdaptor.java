@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PostAdaptor implements PostPort {
-	
+
 	private final PostRepository postRepository;
 
 	@Override

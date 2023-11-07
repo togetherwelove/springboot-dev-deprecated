@@ -13,7 +13,7 @@ public class SmtpAdaptor implements SmtpPort {
 
 	@Override
 	public void send(String email) throws SmtpException {
-		// TODO 회원 확인 이메일 보내기
 		throw new UnsupportedOperationException("Unimplemented method 'send'");
+		// TODO 회원 확인 이메일 보내기 기능 구현
 	}
 }

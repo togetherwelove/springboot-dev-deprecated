@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chanwook.demo.domain.post.Post;
-import com.chanwook.demo.domain.post.api.service.PostService;
+import com.chanwook.demo.domain.post.api.PostUsecase;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/post")
+@RequiredArgsConstructor
 public class PostRestController {
-	
-	private final PostService postService;
-	
+
+	private final PostUsecase postService;
+
 	@Operation(summary = "Post 목록 조회", description = "Post 목록을 조회합니다.", security = {
 			@SecurityRequirement(name = "bearer-key") }, tags = { "게시판" })
 	@GetMapping("/list")

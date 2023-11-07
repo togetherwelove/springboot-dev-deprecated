@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService implements PostUsecase {
 
 	private final PostPort postPort;
-	
+
 	@Override
 	public List<Post> getList() {
 		return postPort.getList();

@@ -1,4 +1,4 @@
-package com.chanwook.demo.application.api.config;
+package com.chanwook.demo.application.api.config.handler;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -9,10 +9,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import com.chanwook.demo.application.api.config.DefaultResponseBody.DefaultResponseBodyBuilder;
 import com.chanwook.demo.application.api.config.common.ResponseCodeEnum;
+import com.chanwook.demo.application.api.config.handler.DefaultResponseBody.DefaultResponseBodyBuilder;
 
-@ControllerAdvice(basePackages = "com.chanwook.demo.app.api")
+@ControllerAdvice(basePackages = "com.chanwook.demo.application.api")
 public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
 
 	@Override

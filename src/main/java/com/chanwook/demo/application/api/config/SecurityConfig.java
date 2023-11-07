@@ -42,11 +42,11 @@ public class SecurityConfig {
 			.antMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
 			.anyRequest().authenticated())
 
-		.authenticationProvider(authenticationProvider)
-
 		.sessionManagement((sessionManagement) -> sessionManagement
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+		.authenticationProvider(authenticationProvider)
+		
 		.logout((logoutConfig) -> logoutConfig
 			.logoutUrl("/auth/logout")
 			.addLogoutHandler(logoutService)
@@ -64,12 +64,12 @@ public class SecurityConfig {
 	@Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-
     }
 }

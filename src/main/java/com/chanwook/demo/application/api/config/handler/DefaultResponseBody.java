@@ -1,4 +1,4 @@
-package com.chanwook.demo.application.api.config;
+package com.chanwook.demo.application.api.config.handler;
 
 import com.chanwook.demo.application.api.config.common.ResponseCodeEnum;
 
