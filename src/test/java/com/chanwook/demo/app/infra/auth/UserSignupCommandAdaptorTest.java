@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.chanwook.demo.app.api.config.QueryDslConfig;
-import com.chanwook.demo.app.infra.auth.repository.UserRepository;
-import com.chanwook.demo.app.infra.auth.repository.entity.Users;
+import com.chanwook.demo.application.infra.auth.UserSignupCommandAdaptor;
+import com.chanwook.demo.application.infra.auth.repository.UserRepository;
+import com.chanwook.demo.application.infra.auth.repository.entity.Users;
+import com.chanwook.demo.application.infra.config.QueryDslConfig;
 import com.chanwook.demo.domain.auth.User;
 
 @DataJpaTest

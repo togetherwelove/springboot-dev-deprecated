@@ -20,9 +20,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.chanwook.demo.app.api.auth.dto.SignupRequest;
-import com.chanwook.demo.app.api.config.service.JwtService;
-import com.chanwook.demo.app.infra.auth.repository.TokenRepository;
+import com.chanwook.demo.application.api.auth.SignupRestController;
+import com.chanwook.demo.application.api.auth.dto.SignupRequest;
+import com.chanwook.demo.application.api.config.service.JwtService;
+import com.chanwook.demo.application.infra.auth.repository.TokenRepository;
 import com.chanwook.demo.domain.auth.api.UserSignupUsecase;
 import com.chanwook.demo.domain.auth.infra.UserSignupCommandPort;
 import com.fasterxml.jackson.databind.ObjectMapper;

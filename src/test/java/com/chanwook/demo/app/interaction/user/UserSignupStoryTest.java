@@ -11,8 +11,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.chanwook.demo.app.api.config.DefaultResponseBody;
-import com.chanwook.demo.app.api.config.common.ResponseCodeEnum;
+import com.chanwook.demo.application.api.config.DefaultResponseBody;
+import com.chanwook.demo.application.api.config.common.ResponseCodeEnum;
 import com.chanwook.demo.domain.auth.api.service.UserSignupCommand;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
