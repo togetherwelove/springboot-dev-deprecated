@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chanwook.demo.application.api.auth.dto.AuthRequest;
 import com.chanwook.demo.application.api.auth.dto.AuthResponse;
 import com.chanwook.demo.application.api.auth.service.AuthService;
-import com.chanwook.demo.application.api.auth.service.vo.AuthVO;
+import com.chanwook.demo.application.api.auth.service.vo.TokenVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class AuthRestController {
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest login) {
 
-		AuthVO authResponse = tokenService.authenticate(login);
+		TokenVO authResponse = tokenService.authenticate(login);
 
 		ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
 				.httpOnly(true)
@@ -50,10 +50,10 @@ public class AuthRestController {
 
 	@Operation(summary = "토큰 재발급", description = "액세스 토큰 만료 시 재발급", tags = { "로그인" })
 	@PostMapping("/refresh")
-	public ResponseEntity<AuthResponse> refreshToken(@CookieValue String refreshToken, HttpServletResponse response) throws IOException {	
+	public ResponseEntity<AuthResponse> refreshToken(@CookieValue String refreshToken, HttpServletResponse response) throws IOException {
 		String accessToken = "";
 		Optional<String> refreshedAccessToken = tokenService.refreshToken(refreshToken, response);
-		if (refreshedAccessToken.isPresent()) {			
+		if (refreshedAccessToken.isPresent()) {
 			accessToken = refreshedAccessToken.get();
 		}
 		return ResponseEntity.ok().body(new AuthResponse(accessToken));

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.chanwook.demo.application.api.auth.dto.AuthRequest;
-import com.chanwook.demo.application.api.auth.service.vo.AuthVO;
+import com.chanwook.demo.application.api.auth.service.vo.TokenVO;
 import com.chanwook.demo.application.api.config.service.JwtService;
 import com.chanwook.demo.application.infra.auth.repository.TokenRepository;
 import com.chanwook.demo.application.infra.auth.repository.UserRepository;
@@ -33,7 +33,7 @@ public class AuthService {
 	private final TokenRepository tokenRepository;
 	private final JwtService jwtService;
 
-	public AuthVO authenticate(AuthRequest login) {
+	public TokenVO authenticate(AuthRequest login) {
 
 		Users user = Users.builder()
 				.email(login.getEmail())
@@ -51,8 +51,8 @@ public class AuthService {
 		String refreshToken = jwtService.generateRefreshToken(user);
 		revokeAllUserTokens(user);
 		saveToken(user, accessToken);
-		saveToken(user, refreshToken);
-		return new AuthVO(accessToken, refreshToken);
+		saveRefreshToken(user, refreshToken);
+		return new TokenVO(accessToken, refreshToken);
 	}
 
 	private void revokeAllUserTokens(Users user) {
@@ -69,7 +69,18 @@ public class AuthService {
 	private void saveToken(Users user, String jwtToken) {
 		Tokens token = Tokens.builder()
 				.token(jwtToken)
-				.tokenType(TokenType.BEARER)
+				.tokenType(TokenType.ACCESS)
+				.expired(false)
+				.revoked(false)
+				.username(user.getUsername())
+				.build();
+		tokenRepository.save(token);
+	}
+	
+	private void saveRefreshToken(Users user, String jwtToken) {
+		Tokens token = Tokens.builder()
+				.token(jwtToken)
+				.tokenType(TokenType.REFRESH)
 				.expired(false)
 				.revoked(false)
 				.username(user.getUsername())
