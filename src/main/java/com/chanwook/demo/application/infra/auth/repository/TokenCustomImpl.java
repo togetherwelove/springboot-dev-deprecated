@@ -3,7 +3,7 @@ package com.chanwook.demo.application.infra.auth.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.chanwook.demo.app.infra.auth.repository.entity.QTokens;
+import com.chanwook.demo.application.infra.auth.repository.entity.QTokens;
 import com.chanwook.demo.application.infra.auth.repository.entity.Tokens;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
