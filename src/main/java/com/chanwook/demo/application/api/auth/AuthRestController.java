@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chanwook.demo.application.api.auth.dto.AuthRequest;
 import com.chanwook.demo.application.api.auth.dto.AuthResponse;
 import com.chanwook.demo.application.api.auth.service.AuthService;
-import com.chanwook.demo.application.api.auth.service.vo.AuthVO;
+import com.chanwook.demo.application.api.auth.service.vo.TokenVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class AuthRestController {
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest login) {
 
-		AuthVO authResponse = tokenService.authenticate(login);
+		TokenVO authResponse = tokenService.authenticate(login);
 
 		ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
 				.httpOnly(true)

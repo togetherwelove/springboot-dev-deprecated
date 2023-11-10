@@ -1,7 +1,5 @@
 package com.chanwook.demo.application.infra.auth.repository.entity;
 
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,7 +24,6 @@ public class Tokens {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id private long id;
 
-	@Column(unique = true)
 	private String token;
 
 	@Enumerated(EnumType.STRING)

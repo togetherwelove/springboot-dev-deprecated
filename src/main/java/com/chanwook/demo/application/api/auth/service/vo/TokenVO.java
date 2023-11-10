@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthVO {
+public class TokenVO {
 	private String accessToken;
 	private String refreshToken;
 }

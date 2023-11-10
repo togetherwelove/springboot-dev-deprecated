@@ -1,32 +1,18 @@
-{"properties": [
+{
+"properties": [
   {
     "name": "application.security.jwt.secret-key",
     "type": "java.lang.String",
-    "description": "secret key for jwt"
+    "description": "JWT를 위한 시크릿 키"
   },
   {
     "name": "application.security.jwt.expiration",
     "type": "java.lang.String",
-    "description": "expiration time of jwt"
+    "description": "액세스 토큰의 만료 시간"
   },
   {
     "name": "application.security.jwt.refresh-token.expiration",
     "type": "java.lang.String",
-    "description": "expiration time of refresh token"
-  },
-  {
-    "name": "spring.mail.auth-code-expiration",
-    "type": "java.lang.String",
-    "description": "expiration time of mail auth code'"
-  },
-  {
-    "name": "management.endpoints.web.base-path",
-    "type": "java.lang.String",
-    "description": "Spring Boot Actuator setting"
-  },
-  {
-    "name": "management.endpoints.web.exposure.include",
-    "type": "java.lang.String",
-    "description": "A description for 'management.endpoints.web.exposure.include'"
+    "description": "리프레시 토큰의 만료 시간"
   }
 ]}

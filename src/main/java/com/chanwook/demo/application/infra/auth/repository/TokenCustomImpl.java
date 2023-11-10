@@ -36,5 +36,4 @@ public class TokenCustomImpl implements TokenCustom {
 						.build())
 				.collect(Collectors.toList());
 	}
-
 }
